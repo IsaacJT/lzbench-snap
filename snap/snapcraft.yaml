@@ -1,0 +1,35 @@
+name: itrue-lzbench
+base: core22
+version: 'v1.8.1'
+summary: lzbench is an in-memory benchmark of open-source compressors
+description: |
+  Useful for benchmarking the performance of various compression algorithms.
+
+  **Note: This is an unoffical snap not developed or managed by the lzbench
+  developers!**
+
+grade: stable
+confinement: strict
+
+parts:
+  lzbench:
+    plugin: nil
+    source: https://github.com/inikep/lzbench.git
+    source-type: git
+    source-depth: 1
+    source-tag: v1.8.1
+    build-environment:
+      - PATH: "/usr/lib/ccache:${PATH}"
+    build-packages:
+      - make
+      - g++
+    override-build: |
+      make
+      install -Dm0755 "${CRAFT_PART_BUILD}/lzbench" \
+        "${CRAFT_PART_INSTALL}/usr/bin/lzbench"
+
+apps:
+  itrue-lzbench:
+    command: usr/bin/lzbench
+    plugs:
+      - home
